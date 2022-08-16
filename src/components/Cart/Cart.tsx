@@ -4,18 +4,37 @@ import CartProducts from './CartProducts';
 import { useCart } from 'contexts/cart-context';
 
 import * as S from './style';
+import axios from 'axios';
+import { ModalContext } from 'components/CheckoutModal';
+import { useContext } from 'react';
 
 const Cart = () => {
   const { products, total, isOpen, openCart, closeCart } = useCart();
-
+  const {showModal}:any = useContext(ModalContext);
   const handleCheckout = () => {
     if (total.productQuantity) {
-      alert(
-        `Checkout - Subtotal: ${total.currencyFormat} ${formatPrice(
+      axios.post("http://localhost:8000/rule/exec/62fae33bc824a26b865562eb?secret=ZfKhzFz70d",{
+      // axios.post("http://localhost:8000/rule/exec/62ed07c7dc2fa3caeef94118?secret=1234567890",{
+        price:parseInt(formatPrice(
           total.totalPrice,
           total.currencyId
-        )}`
-      );
+        ))
+      }).then((res) => {
+        showModal(true,res.data);
+        console.log(res.data);
+        // alert(res.data);
+        closeCart()
+      }).catch((err) => {
+        console.log(err);
+        showModal(false,err.response.data)
+        // alert(err.response.data);
+      });
+      // alert(
+      //   `Checkout - Subtotal: ${total.currencyFormat} ${formatPrice(
+      //     total.totalPrice,
+      //     total.currencyId
+      //   )}`
+      // );
     } else {
       alert('Add some product in the cart!');
     }

@@ -9,6 +9,7 @@ import Cart from 'components/Cart';
 import { useProducts } from 'contexts/products-context';
 
 import * as S from './style';
+import CheckoutModal from 'components/CheckoutModal';
 
 function App() {
   const { isFetching, products, fetchProducts } = useProducts();
@@ -19,6 +20,7 @@ function App() {
 
   return (
     <S.Container>
+      <CheckoutModal>
       {isFetching && <Loader />}
       <GithubCorner />
       <S.TwoColumnGrid>
@@ -34,6 +36,8 @@ function App() {
         </S.Main>
       </S.TwoColumnGrid>
       <Cart />
+
+      </CheckoutModal>
     </S.Container>
   );
 }
